@@ -6,7 +6,7 @@
 - Retrieve details of movies
 - Register new user
 - Update user profiles
-- Add/remove movie to favorites list
+- Add/remove movie to the favorites list
 - Deregister users
 
 ## Run Locally
@@ -14,7 +14,7 @@
 ```bash
   https://github.com/sanjushahgupta/flix-api.git
 ```
-#### Go to the project directory and the required dependencies
+#### Go to the project directory and install the required dependencies
 ```bash
   cd movie_api 
   npm install
