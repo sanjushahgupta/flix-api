@@ -14,11 +14,13 @@
 ```bash
   https://github.com/sanjushahgupta/flix-api.git
 ```
-#### Go to the project directory
+#### Go to the project directory and the required dependencies
 ```bash
   cd movie_api 
+  npm install
  ```
-#### Start the development server and run in web browser 
+
+#### Start the development server and run it in a web browser 
 ```bash
   node server.js
  ```
