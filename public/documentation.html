@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>documentation.html</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
@@ -12,16 +13,94 @@
     <h2>
         With this application, users can access information about movies and
         can save their favorites movies with their credentials.</h2>
+    <h3>Essential Features:</h3>
+    <table>
+        <tr>
+            <th>Business Logic</th>
+            <th>URL</th>
+            <th>HTTP Method</th>
+            <th>Path Parameters</th>
+            <th>Request body data format</th>
+            <th>Response body data format</th>
+        </tr>
 
-    <h3>Features:</h3>
-    <ul>
-        <li>Retrieve list of movies</li>
-        <li>Retrieve details of movies</li>
-        <li>Register new user</li>
-        <li>Update user profiles</li>
-        <li>Add/remove movie to favorites list</li>
-        <li>Deregister users</li>
-    </ul>
+        <tr>
+            <td>Get a list of all movies</td>
+            <td>/movies</td>
+            <td>GET</td>
+            <td>None</td>
+            <td>None</td>
+            <td>Json object holding data about all the movies</td>
+        </tr>
+        <tr>
+            <td>Get a data about single movie by title</td>
+            <td>/movies/:title</td>
+            <td>GET</td>
+            <td>title</td>
+            <td>None</td>
+            <td>Json object holding data about movie, containingdescription, genre, director, image URL, whether it’s
+                featured or not </td>
+        </tr>
+        <tr>
+            <td>Get data about a genre by name</td>
+            <td>/movie/genre/:name</td>
+            <td>GET</td>
+            <td>name</td>
+            <td>None</td>
+            <td>JSON object of a specific genre</td>
+        </tr>
+        <tr>
+            <td>Get data about a director by name</td>
+            <td>/movies/directors/:name</td>
+            <td>GET</td>
+            <td>name</td>
+            <td>None</td>
+            <td>Json object holding data about specific director</td>
+
+        </tr>
+        <tr>
+            <td>Register new user</td>
+            <td>/register</td>
+            <td>POST</td>
+            <td>None</td>
+            <td>Json object holding data about user</td>
+            <td>Json object holding data about added use, including ID</td>
+        </tr>
+        <tr>
+            <td>Update their user info</td>
+            <td>/user/:id</td>
+            <td>PUT</td>
+            <td>ID</td>
+            <td>username</td>
+            <td>Text message indicating username is updated</td>
+        </tr>
+        <tr>
+            <td>Add movie to favourite list</td>
+            <td>/addfab/:userId/:movieTitle</td>
+            <td>POST</td>
+            <td>userId, movieTitle</td>
+            <td>None</td>
+            <td>Text message indicating movie has been added to favourite list</td>
+        </tr>
+        <tr>
+            <td>Remove movie from favourite list</td>
+            <td>/deletefab/:userId/:movieTitle</td>
+            <td>DELETE</td>
+            <td>userId,movieID</td>
+            <td>None</td>
+            <td>Text message indicating a movie has been removed from favourite list </td>
+        </tr>
+        <tr>
+            <td>Deregister existing user</td>
+            <td>/deleteUser/:id</td>
+            <td>Delete</td>
+            <td>ID</td>
+            <td>None</td>
+            <td>Text message indicating a user email has been removed</td>
+        </tr>
+
+    </table>
+
 
 </body>
 
