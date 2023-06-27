@@ -1,70 +1,70 @@
-const express = require('express'),
-    mongoose = require('mongoose'),
-    Models = require('./models.js'),
-    bodyparser = require('body-parser'),
-    uuid = require('uuid'),
-    morgan = require('morgan'),
-    fs = require('fs'),
-    path = require('path'),
-    accessLogStream = fs.createWriteStream(path.join('log.txt'), { flags: 'a' });
-
-const app = express(),
+const express = require("express"),
+    mongoose = require("mongoose"),
+    Models = require("./models.js"),
+    bodyparser = require("body-parser"),
+    uuid = require("uuid"),
+    morgan = require("morgan"),
+    fs = require("fs"),
+    path = require("path"),
+    accessLogStream = fs.createWriteStream(path.join("log.txt"), { flags: "a" }),
+    app = express(),
     Movies = Models.Movie,
     Users = Models.User;
-mongoose.connect('mongodb://localhost:27017/db', { useNewUrlParser: true, useUnifiedTopology: true });
+
+//to connect with database
+mongoose.connect("mongodb://localhost:27017/db", { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(bodyparser.json());
 
-
-app.get('/movies', (req, res) => {
+app.get("/movies", (req, res) => {
     Movies.find()
         .then(movies => {
-            res.status(201).json(movies);
+            return res.status(201).json(movies);
         })
         .catch(err => {
             console.error(err);
-            res.status(500).send('Error: ' + err);
+            return res.status(500).send("Error: " + err);
         });
 });
 
-app.get('/movies/:title', (req, res) => {
-    Movies.find({ "Title": req.params.title }).
-        then(movie => {
-            res.status(201).json(movie);
+
+app.get("/movies/:title", (req, res) => {
+    Movies.find({ "Title": req.params.title })
+        .then(movie => {
+            return res.status(201).json(movie);
         }).catch(err => {
-            console.error(err);
-            res.status(500).send('Error: ' + 'Sorry, we cannot find such movie.');
+            return res.status(500).send("Error: Sorry, the requested movie was not found.");
         })
 });
 
 
-app.get('/movies/genre/:name', (req, res) => {
-    Movies.findOne({ "Genre.Name": req.params.name }).
-        then(movie => {
+app.get("/movies/genre/:name", (req, res) => {
+    Movies.findOne({ "Genre.Name": req.params.name })
+        .then(movie => {
             var genreDescription = movie.Genre.Description;
-            res.status(201).json(genreDescription)
+            return res.status(201).json(genreDescription);
         }).catch(err => {
-            res.status(500).send('Sorry, we cannot find such genre.');
+            return res.status(500).send("Error: Sorry, the genre of requested movie was not found.");
         })
 })
 
 
-app.get('/movies/directors/:name', (req, res) => {
+app.get("/movies/directors/:name", (req, res) => {
     Movies.findOne({ "Director.Name": req.params.name }).
         then(movie => {
             var directorDetails = movie.Director
             return res.status(200).json(directorDetails);
         }).catch(err => {
-            return res.status(500).send('Sorry, we cannot find director details.');
+            return res.status(500).send("Error: Sorry, the director's details of requested movie were not found.");
         })
 })
 
 
-app.post('/register', (req, res) => {
+app.post("/register", (req, res) => {
     Users.findOne({ "userName": req.body.userName })
         .then(user => {
             if (user) {
-                return res.status(400).send(req.body.userName + 'Username already exists. Username should be unique.');
+                return res.status(400).send(req.body.userName + "Username already exists.");
             } else {
                 Users.create({
                     userName: req.body.userName,
@@ -73,16 +73,16 @@ app.post('/register', (req, res) => {
                     Birth: req.body.Birth
                 }).then((user) => { res.status(201).json(user) })
                     .catch((error) => {
-                        console.error(error);
-                        res.status(500).send('Error: ' + error);
+                        return res.status(500).send("Error: " + error);
                     })
             }
         }).catch(er => {
-            return res.status(400).send("Sorry,Unable to register. Please check your credentials.")
+            return res.status(400).send("Sorry,unable to register. Please check your credentials.")
         })
 })
 
-app.put('/user/:userName', (req, res) => {
+
+app.put("/user/:userName", (req, res) => {
     Users.findOneAndUpdate({ userName: req.params.userName },
         {
             $set: {
@@ -103,7 +103,9 @@ app.put('/user/:userName', (req, res) => {
         return res.status(400).send("Error:" + err)
     })
 })
-app.post('/addfab/:userName/:movieTitle', (req, res) => {
+
+
+app.post("/addfab/:userName/:movieTitle", (req, res) => {
     Movies.findOne({ Title: req.params.movieTitle })
         .then(movie => {
             if (movie) {
@@ -117,17 +119,19 @@ app.post('/addfab/:userName/:movieTitle', (req, res) => {
                         res.status(200).json(user);
                     })
                     .catch(err => {
-                        res.status(400).send(err);
+                        res.status(400).send("Error:" + err);
                     });
             } else {
-                res.status(400).send("Movie not found.");
+                res.status(400).send("Error: Request movie was not found.");
             }
         })
         .catch(err => {
             res.status(500).send(err);
         });
 });
-app.delete('/deletefab/:userName/:movieTitle', (req, res) => {
+
+
+app.delete("/deletefab/:userName/:movieTitle", (req, res) => {
     Movies.findOne({ Title: req.params.movieTitle }).
         then(movie => {
             if (movie) {
@@ -140,37 +144,39 @@ app.delete('/deletefab/:userName/:movieTitle', (req, res) => {
                         return res.status(500).send(err);
                     })
             } else {
-                return res.status(500).send("Movie not found.")
+                return res.status(500).send("Error: Request movie was not found.")
             }
         }).catch(err => {
-            return res.status(500).send(err);
+            return res.status(500).send("Error:" + err);
         })
 })
 
-app.delete('/deleteUser/:userName', (req, res) => {
+
+app.delete("/deleteUser/:userName", (req, res) => {
     Users.findOneAndRemove({ userName: req.params.userName })
         .then((user) => {
             if (!user) {
-                res.status(400).send(req.params.userName + ' was not found');
+                res.status(400).send("Account was not found");
             } else {
-                res.status(200).send(req.params.userName + ' :Account deleted.');
+                res.status(200).send("Requested account deleted.");
             }
         })
         .catch((err) => {
             console.error(err);
-            res.status(500).send('Error: ' + err);
+            res.status(500).send("Error: " + err);
         });
 });
 
-app.use(express.static('public'));
-app.use(morgan('combined', { stream: accessLogStream }));
 
+app.use(express.static("public"));
+app.use(morgan("combined", { stream: accessLogStream }));
 app.use((err, req, res, next) => {
     res.status(500).send("error" + err);
 })
 
+
 app.listen(8080, () => {
-    console.log('App is listening on port 8080.');
+    console.log("App is listening on port 8080.");
 })
 
 

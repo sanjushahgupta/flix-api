@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+//define movieSchema
 let movieSchema = mongoose.Schema({
     Title: { type: String, required: true },
     Description: String,
@@ -18,7 +19,7 @@ let movieSchema = mongoose.Schema({
 
 });
 
-
+//define movieSchema
 let userSchema = mongoose.Schema({
     userName: { type: String, required: true },
     Password: { type: String, required: true },
@@ -27,7 +28,11 @@ let userSchema = mongoose.Schema({
     favoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
 });
 
+//create models
 let Movie = mongoose.model("Movie", movieSchema);
 let User = mongoose.model("User", userSchema);
+
+
+//export models to use by different files
 module.exports.Movie = Movie;
 module.exports.User = User;

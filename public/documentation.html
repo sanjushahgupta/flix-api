@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>documentation.html</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
 </head>
 
 <body>
@@ -25,78 +25,174 @@
         </tr>
 
         <tr>
+            <td>Get a data about single movie by title</td>
+            <td>/movies/:title</td>
+            <td>GET</td>
+            <td>title:String</td>
+            <td>None</td>
+            <td>Json object holding data about movie.
+                {Title:String,
+                Description: String,
+                Genre: {
+                Name: String,
+                Description: String
+                },
+                Director: {
+                Name: String,
+                Bio: String,
+                Birth: Date,
+                },
+                Actor: String,
+                Image: String,
+                Featured: Boolean}<br>
+                Eg: {Title:"Titanic",
+                Description:"It is a 1997 American epic romance."",
+                Genre: {
+                Name: "Romance",
+                Description:"It is based on accounts of the sinking of RMS Titanic."
+                },
+                Director: {
+                Name: "James Cameron",
+                Bio:"He is also film director and screenwriter." ,
+                Birth: "1954",
+                },
+                Actor: "Leonardo DiCaprio",
+                Image: "titanic.png",
+                Featured: false}
+
+            </td>
+        </tr>
+
+        <tr>
             <td>Get a list of all movies</td>
             <td>/movies</td>
             <td>GET</td>
             <td>None</td>
             <td>None</td>
-            <td>Json object holding data about all the movies</td>
-        </tr>
-        <tr>
-            <td>Get a data about single movie by title</td>
-            <td>/movies/:title</td>
-            <td>GET</td>
-            <td>title</td>
-            <td>None</td>
-            <td>Json object holding data about movie,containingdescription, genre, director, image URL, whether it’s
-                featured or not </td>
-        </tr>
-        <tr>
-            <td>Get data about a genre by name</td>
-            <td>/movies/genre/:name</td>
-            <td>GET</td>
-            <td>name</td>
-            <td>None</td>
-            <td>JSON object of a specific genre</td>
-        </tr>
-        <tr>
-            <td>Get data about a director by name</td>
-            <td>/movies/directors/:name</td>
-            <td>GET</td>
-            <td>name</td>
-            <td>None</td>
-            <td>Json object holding data about specific director</td>
-
+            <td>Json object holding data about all the movies
+                (list of movies with movie details including movie's escription, genre, director, image URL, whether
+                it’s
+                featured or not)</td>
         </tr>
         <tr>
             <td>Register new user</td>
             <td>/register</td>
             <td>POST</td>
             <td>None</td>
-            <td>Json object holding data about user</td>
-            <td>Json object holding data about added use, including ID and favourites movies array</td>
+            <td>Json object holding data about user({userName:String,
+                Password: String,
+                Email: String,
+                Birth: String}eg:
+                { "userName": "Avi", "Password": "127%hj34@6", "Email":"abhi@gmail.com", "Birth": "1990-02-13"})</td>
+            <td>Json object holding data about added use, including ID and favourites movies array
+                (id,userName,Password,Email,Birth,favoritesMovies[]
+                eg:{
+                "userName": "Avi",
+                "Password": "127%34@6",
+                "Email": "abhi@gmail.com",
+                "Birth": "1990-02-13",
+                "favoriteMovies": [],
+                "_id": "649b15eb9c3c29ba3c3c257a",
+                "__v": 0
+                })
+            </td>
         </tr>
         <tr>
+            <td>Get genre's description about a genre by name</td>
+            <td>/movies/genre/:name</td>
+            <td>GET</td>
+            <td>name:String</td>
+            <td>None</td>
+            <td>Description of specific genre.
+                "It is a biographical drama based on the life of South Indian actress Savitri."</td>
+        </tr>
+        <tr>
+            <td>Get data about a director by name</td>
+            <td>/movies/directors/:name</td>
+            <td>GET</td>
+            <td>name:String</td>
+            <td>None</td>
+            <td>Json object holding data about specific director(director's name,bio,birthdate)
+                eg:{
+                "Name": "Sukumar",
+                "Bio": "Sukumar is a talented South Indian filmmaker known for his unique storytelling and innovative
+                approach to filmmaking.",
+                "Birth": "1970-01-10T23:00:00.000Z"
+                }
+            </td>
+        </tr>
+
+        <tr>
             <td>Update their user info</td>
-            <td>/user/:userId</td>
+            <td>/user/:userName</td>
             <td>PUT</td>
-            <td>userId</td>
-            <td>username</td>
-            <td>Text message indicating username is updated</td>
+            <td>userName:String</td>
+            <td>{userName:String,
+                Password: String,
+                Email: String,
+                Birth: String}
+                eg: { "userName": "Abhir", "Password": "127%34@6", "Birth": "1990-02-13"}</td>
+            <td>Json object holding updated user's information(id,userName,Password,Email,Birth,favoritesMovies[])
+                eg:{
+                "_id": "649b15da9c3c29ba3c3c2577",
+                "userName": "Abhir",
+                "Password": "127%34@6",
+                "Email": "abhi@gmail.com",
+                "Birth": "1990-02-13",
+                "favoriteMovies": [],
+                "__v": 0
+                }.</td>
         </tr>
         <tr>
             <td>Add movie to favourite list</td>
-            <td>/addfab/:userId/:movieTitle</td>
+            <td>/addfab/:userName/:movieTitle</td>
             <td>POST</td>
-            <td>userId, movieTitle</td>
+            <td>userName:String, movieTitle:String</td>
             <td>None</td>
-            <td>Text message indicating movie has been added to favourite list</td>
+            <td>User's json object with new movie added(id,userName,Password,Email,Birth,favoritesMovies[ref:newMovie])
+                eg: {
+                "_id": "649990b8cfb9285bf3b0840a",
+                "userName": "Abhir",
+                "Password": "127%34@6",
+                "Email": "abhi@gmail.com",
+                "Birth": "1990-02-13",
+                "favoriteMovies": [
+                "64996bafcfb9285bf3b083fb",
+                "64996967cfb9285bf3b083f8",
+                "649969afcfb9285bf3b083fa"
+                ]
+                }
+            </td>
         </tr>
         <tr>
             <td>Remove movie from favourite list</td>
-            <td>/deletefab/:userId/:movieTitle</td>
+            <td>/deletefab/:userName/:movieTitle</td>
             <td>DELETE</td>
-            <td>userId,movieTitle</td>
+            <td>userName:String,movieTitle:String</td>
             <td>None</td>
-            <td>Text message indicating a movie has been removed from favourite list </td>
+            <td>User's json object without requested
+                movie i.e(id,userName,Password,Email,Birth,favoritesMovies[ref])
+                {
+                "_id": "649990b8cfb9285bf3b0840a",
+                "userName": "Abhir",
+                "Password": "127%34@6",
+                "Email": "abhi@gmail.com",
+                "Birth": "1990-02-13",
+                "favoriteMovies": [
+                "64996bafcfb9285bf3b083fb",
+                "64996967cfb9285bf3b083f8"
+                ]
+                }</td>
         </tr>
         <tr>
             <td>Deregister existing user</td>
-            <td>/deleteUser/:userId</td>
+            <td>/deleteUser/:userName</td>
             <td>DELETE</td>
-            <td>userId</td>
+            <td>userName:String</td>
             <td>None</td>
-            <td>Text message indicating a user email has been removed</td>
+            <td>Text message indicating a requested account has been removed.
+                eg: Account deleted.
+            </td>
         </tr>
 
     </table>

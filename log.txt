@@ -41,3 +41,6 @@
 ::1 - - [27/Jun/2023:15:22:07 +0000] "POST /user/sam HTTP/1.1" 404 148 "-" "PostmanRuntime/7.32.3"
 ::1 - - [27/Jun/2023:15:23:53 +0000] "POST /user/sam HTTP/1.1" 404 148 "-" "PostmanRuntime/7.32.3"
 ::1 - - [27/Jun/2023:15:24:21 +0000] "POST /user/sam HTTP/1.1" 404 148 "-" "PostmanRuntime/7.32.3"
+::1 - - [27/Jun/2023:15:52:02 +0000] "POST /user/sam HTTP/1.1" 404 148 "-" "PostmanRuntime/7.32.3"
+::1 - - [27/Jun/2023:17:00:49 +0000] "POST /user/ HTTP/1.1" 404 145 "-" "PostmanRuntime/7.32.3"
+::1 - - [27/Jun/2023:17:01:07 +0000] "POST /user/ HTTP/1.1" 404 145 "-" "PostmanRuntime/7.32.3"
