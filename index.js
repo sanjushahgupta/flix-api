@@ -6,6 +6,7 @@ const express = require("express"),
     morgan = require("morgan"),
     fs = require("fs"),
     path = require("path"),
+    _ = require("lodash"),
     accessLogStream = fs.createWriteStream(path.join("log.txt"), { flags: "a" }),
     app = express(),
     Movies = Models.Movie,
@@ -71,7 +72,9 @@ app.post("/register", (req, res) => {
                     Password: req.body.Password,
                     Email: req.body.Email,
                     Birth: req.body.Birth
-                }).then((user) => { res.status(201).json(user) })
+                }).then((user) => {
+                    res.status(201).json(_.pick(user, ['userName', 'Email', 'Birth']))
+                })
                     .catch((error) => {
                         return res.status(500).send("Error: " + error);
                     })
@@ -94,7 +97,7 @@ app.put("/user/:userName", (req, res) => {
         }, { new: true }
     ).then(updatedUser => {
         if (updatedUser) {
-            return res.status(200).json(updatedUser);
+            return res.status(200).json(res.status(201).json(_.pick(updatedUser, ['userName', 'Email', 'Birth'])));
         } else {
             return res.status(400).send("Error: Username doesnot exists.");
         }
