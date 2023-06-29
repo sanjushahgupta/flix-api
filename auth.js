@@ -1,5 +1,6 @@
 const jwtSecret = 'secret-key',
     jwt = require('jsonwebtoken'),
+    lodAsh = require('lodash'),
     passport = require('passport');
 
 require('./passport');
@@ -13,14 +14,14 @@ let generateJWTToken = (user) => {
     });
 }
 
-/* POST login. */
+/* login. */
 module.exports = (router) => {
     router.post('/login', (req, res) => {
         passport.authenticate('local', { session: false }, (error, user, info) => {
             if (error || !user) {
                 console.log(error);
                 return res.status(400).json({
-                    message: 'Something is not right',
+                    message: 'Something went wrong',
                     error: error
                 });
             }
@@ -29,7 +30,8 @@ module.exports = (router) => {
                     res.send(error);
                 }
                 let token = generateJWTToken(user.toJSON());
-                return res.json({ user, token });
+                let selectedProperties = lodAsh.pick(user, ['userName', 'Email', 'Birth']);
+                return res.json({ user: selectedProperties, token });
             });
         })(req, res);
     });

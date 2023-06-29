@@ -6,6 +6,7 @@ const express = require("express"),
     morgan = require("morgan"),
     fs = require("fs"),
     path = require("path"),
+    lodAsh = require('lodash'),
     accessLogStream = fs.createWriteStream(path.join("log.txt"), { flags: "a" }),
     app = express(),
     Movies = Models.Movie,
@@ -86,7 +87,7 @@ app.post("/register", (req, res) => {
                         Birth: req.body.Birth
                     })
                         .then(user => {
-                            res.status(201).json(_.pick(user, ['userName', 'Email', 'Birth']));
+                            res.status(201).json(lodAsh.pick(user, ['userName', 'Email', 'Birth']));
                         })
                         .catch(error => {
                             return res.status(500).send("Error: " + error);
@@ -125,9 +126,9 @@ app.put("/user/:userName", passport.authenticate('jwt', { session: false }), (re
                         { new: true }
                     ).then(updatedUser => {
                         if (updatedUser) {
-                            return res.status(200).json(_.pick(updatedUser, ['userName', 'Email', 'Birth']));
+                            return res.status(200).json(lodAsh.pick(updatedUser, ['userName', 'Email', 'Birth', 'favoriteMovies']));
                         } else {
-                            return res.status(400).send("Error: userName does not exist.");
+                            return res.status(400).send("Error:Sorry, unable to update. Please check your credentials.");
                         }
                     }).catch(err => {
                         return res.status(400).send("Error: " + err);
@@ -151,13 +152,13 @@ app.post("/addfab/:userName/:movieTitle", passport.authenticate('jwt', { session
                     { new: true }
                 )
                     .then(user => {
-                        res.status(201).json(_.pick(user, ['userName', 'Email', 'Birth']))
+                        res.status(201).json(lodAsh.pick(user, ['userName', 'favoriteMovies']))
                     })
                     .catch(err => {
                         res.status(400).send("Error:" + err);
                     });
             } else {
-                res.status(400).send("Error: Request movie was not found.");
+                res.status(400).send("Error: Requested movie was not found.");
             }
         })
         .catch(err => {
@@ -174,12 +175,12 @@ app.delete("/deletefab/:userName/:movieTitle", passport.authenticate('jwt', { se
                 Users.findOneAndUpdate({ userName: req.params.userName },
                     { $pull: { favoriteMovies: movieId } },
                     { new: true }).then(user => {
-                        return res.status(200).json(user)
+                        return res.status(200).json(lodAsh.pick(user, ['userName', 'favoriteMovies']))
                     }).catch(err => {
                         return res.status(500).send(err);
                     })
             } else {
-                return res.status(500).send("Error: Request movie was not found.")
+                return res.status(500).send("Error: Requested movie was not found.")
             }
         }).catch(err => {
             return res.status(500).send("Error:" + err);
