@@ -21,11 +21,15 @@ app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 require('./passport');
 
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
+app.get('/', (req, res) => {
+    res.send('Welcome to movie app!');
+});
 app.get("/movies", passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
         .then(movies => {
