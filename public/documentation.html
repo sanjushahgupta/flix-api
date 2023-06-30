@@ -85,16 +85,15 @@
                 Birth: String}eg:
                 { "userName": "Avi", "Password": "127%hj34@6", "Email":"abhi@gmail.com", "Birth": "1990-02-13"})</td>
             <td>Json object holding data about added use, including ID and favourites movies array
-                (id,userName,Password,Email,Birth,favoritesMovies[]
+                (id,userName,Email,Birth,favoritesMovies)
                 eg:{
                 "userName": "Avi",
-                "Password": "127%34@6",
                 "Email": "abhi@gmail.com",
                 "Birth": "1990-02-13",
                 "favoriteMovies": [],
                 "_id": "649b15eb9c3c29ba3c3c257a",
                 "__v": 0
-                })
+                }
             </td>
         </tr>
         <tr>
@@ -132,11 +131,10 @@
                 Email: String,
                 Birth: String}
                 eg: { "userName": "Abhir", "Password": "127%34@6", "Birth": "1990-02-13"}</td>
-            <td>Json object holding updated user's information(id,userName,Password,Email,Birth,favoritesMovies[])
+            <td>Json object holding updated user's information(id,userName,Email,Birth,favoritesMovies[])
                 eg:{
                 "_id": "649b15da9c3c29ba3c3c2577",
                 "userName": "Abhir",
-                "Password": "127%34@6",
                 "Email": "abhi@gmail.com",
                 "Birth": "1990-02-13",
                 "favoriteMovies": [],
@@ -149,17 +147,12 @@
             <td>POST</td>
             <td>userName:String, movieTitle:String</td>
             <td>None</td>
-            <td>User's json object with new movie added(id,userName,Password,Email,Birth,favoritesMovies[ref:newMovie])
+            <td>User's json object with new movie added(id,userName,favoritesMovies[ref:newMovie])
                 eg: {
                 "_id": "649990b8cfb9285bf3b0840a",
                 "userName": "Abhir",
-                "Password": "127%34@6",
-                "Email": "abhi@gmail.com",
-                "Birth": "1990-02-13",
                 "favoriteMovies": [
                 "64996bafcfb9285bf3b083fb",
-                "64996967cfb9285bf3b083f8",
-                "649969afcfb9285bf3b083fa"
                 ]
                 }
             </td>
@@ -171,13 +164,9 @@
             <td>userName:String,movieTitle:String</td>
             <td>None</td>
             <td>User's json object without requested
-                movie i.e(id,userName,Password,Email,Birth,favoritesMovies[ref])
+                movie i.e(userName,favoritesMovies[ref])
                 {
-                "_id": "649990b8cfb9285bf3b0840a",
                 "userName": "Abhir",
-                "Password": "127%34@6",
-                "Email": "abhi@gmail.com",
-                "Birth": "1990-02-13",
                 "favoriteMovies": [
                 "64996bafcfb9285bf3b083fb",
                 "64996967cfb9285bf3b083f8"
