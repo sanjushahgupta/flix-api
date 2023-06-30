@@ -1,4 +1,4 @@
-const jwtSecret = 'secret-key',
+const jwtSecret = process.env.MOVIE_JWT_SECRET,
     jwt = require('jsonwebtoken'),
     lodAsh = require('lodash'),
     passport = require('passport');
