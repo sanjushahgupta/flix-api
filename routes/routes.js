@@ -2,7 +2,7 @@ const passport = require('passport');
 const userController = require('../controllers/users.js');
 const movieController = require('../controllers/movies.js');
 const { check, validationResult } = require('express-validator');
-
+const authJWT = passport.authenticate('jwt', { session: false });
 
 const checkValidation = [
     check('userName', 'Username length should be more than 4').isLength({ min: 5 }),
@@ -11,7 +11,7 @@ const checkValidation = [
     check('email', 'Email does not appear to be valid').isEmail()
 ];
 
-const authJWT = passport.authenticate('jwt', { session: false });
+
 module.exports = (app) => {
     app.get('/', (res) => { res.send('Movie'); });
     app.get("/movies", authJWT, movieController.listOfMovies)

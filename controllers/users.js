@@ -32,7 +32,7 @@ module.exports.registerUser = function (req, res) {
         if (typeof result === Object && result.userName !== '') {
             return res.status(201).json(result);
         }
-        return res.status(400).send(result);
+        return res.status(400).json(result);
     })
 };
 
@@ -40,9 +40,9 @@ module.exports.registerUser = function (req, res) {
 module.exports.updateUser = function (req, res) {
     const userToUpdate = {
         userName: req.body.userName,
-        password: req.body.password,
-        email: req.body.email,
-        birth: req.body.birth,
+        Password: req.body.password,
+        Email: req.body.email,
+        Birth: req.body.birth,
     }
 
     const oldUserName = req.params.userName
@@ -50,6 +50,7 @@ module.exports.updateUser = function (req, res) {
     if (!errors.isEmpty()) {
         return res.status(422).json({ error: errors.array()[0].msg });
     }
+
     usersService.updateUser(userToUpdate, oldUserName).then(result => {
         if (typeof result === Object && result.userName !== '') {
             return res.status(200).json(result);
@@ -60,18 +61,15 @@ module.exports.updateUser = function (req, res) {
 
 
 module.exports.deleteUser = function (req, res) {
-    Users.findOneAndRemove({ userName: req.params.userName })
-        .then((user) => {
-            if (!user) {
-                res.status(400).send("Account was not found");
-            } else {
-                res.status(200).send("Requested account deleted.");
-            }
-        })
-        .catch((err) => {
-            res.status(500).send("Error: " + err);
-        });
-};
+    usersService.deleteUser(req.params.userName).then(result => {
+        if (result instanceof Error) {
+            return res.status(400).send(result.message);
+        }
+
+        return res.status(200).send('Account deleted');
+    })
+}
+
 
 
 

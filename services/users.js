@@ -3,7 +3,7 @@ const lodash = require('lodash');
 
 module.exports.registerUser = async (userTocreate) => {
     let hashedPassword = userModels.User.hashPassword(userTocreate.password);
-    userTocreate.password = hashedPassword
+
 
     const userWithMatchingUserName = await userModels.User.findOne({ userName: userTocreate.userName });
     if (userWithMatchingUserName) {
@@ -15,17 +15,22 @@ module.exports.registerUser = async (userTocreate) => {
         return 'email  already exists';
     }
 
-    const newlyCreatedUser = await userModels.User.create({
+    const newlyCreatedDBUser = await userModels.User.create({
         userName: userTocreate.userName,
         Email: userTocreate.email,
         Birth: userTocreate.birth,
-        Password: userTocreate.password
+        Password: hashedPassword
     });
-    if (newlyCreatedUser) {
-        return lodash.pick(newlyCreatedUser, ['userName', 'Email', 'Birth', '_id']);
+
+    if (newlyCreatedDBUser) {
+        return {
+            userName: newlyCreatedDBUser.userName,
+            email: newlyCreatedDBUser.Email,
+            birth: newlyCreatedDBUser.Birth,
+        }
     }
 
-    return error
+    return new Error('Unable to create account.')
 }
 
 module.exports.updateUser = async (newData, oldUserName) => {
@@ -44,7 +49,7 @@ module.exports.updateUser = async (newData, oldUserName) => {
         return userWithMatchingEmail.Email + ' already exist';
     }
 
-    const updatedUser = await userModels.User.findOneAndUpdate(
+    const updatedDBUser = await userModels.User.findOneAndUpdate(
         { userName: oldUserName },
         {
             $set: {
@@ -56,13 +61,24 @@ module.exports.updateUser = async (newData, oldUserName) => {
         },
         { new: true }
     );
-    if (updatedUser) {
-        return lodash.pick(updatedUser, ['userName', 'Email', 'Birth', '_id', 'favoriteMovies']);
+    if (updatedDBUser) {
+        return {
+            userName: updatedDBUser.userName,
+            email: updatedDBUser.email,
+            birth: updatedDBUser.birth
+        }
     }
 
-    return "Error" + error
+    return new Error('Unable to update user.');
 }
 
 
+module.exports.deleteUser = async (userName) => {
+    const matchedUser = await userModels.User.findOneAndRemove({ userName: userName });
+    if (matchedUser) {
+        return "Account deleted"
+    }
+    return new Error("User account not found.");
+}
 
 

@@ -1,12 +1,12 @@
-const express = require("express"),
-    movieModels = require("../models/movies.js"),
-    userModels = require("../models/users.js"),
-    bodyParser = require("body-parser"),
-    cors = require('cors'),
-    lodAsh = require('lodash'),
-    Movies = movieModels.Movie,
-    Users = userModels.User,
-    app = express();
+const express = require("express");
+const movieModels = require("../models/movies.js");
+const userModels = require("../models/users.js");
+const bodyParser = require("body-parser");
+const lodAsh = require('lodash');
+const Movies = movieModels.Movie;
+const Users = userModels.User;
+const app = express();
+const cors = require('cors');
 
 app.use(cors());
 app.use(express.static('public'));
