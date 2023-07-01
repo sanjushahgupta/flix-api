@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 let movieSchema = mongoose.Schema({
     Title: { type: String, required: true },
     Description: String,
@@ -14,7 +15,7 @@ let movieSchema = mongoose.Schema({
     Actor: String,
     Image: String,
     Featured: Boolean
-
 });
+
 let Movie = mongoose.model("Movie", movieSchema);
 module.exports.Movie = Movie;

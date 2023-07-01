@@ -1,10 +1,9 @@
-const jwtSecret = process.env.MOVIE_JWT_SECRET,
-    jwt = require('jsonwebtoken'),
-    lodAsh = require('lodash'),
-    passport = require('passport');
+const jwtSecret = process.env.MOVIE_JWT_SECRET;
+const jwt = require('jsonwebtoken');
+const lodAsh = require('lodash');
+const passport = require('passport');
 
-require('../config/passport');
-
+require('../passport');
 
 function generateJWTToken(user) {
     return jwt.sign(user, jwtSecret, {
@@ -14,8 +13,8 @@ function generateJWTToken(user) {
     });
 }
 
-module.exports = (router) => {
-    router.post('/login', (req, res) => {
+module.exports = (app) => {
+    app.post('/login', (req, res) => {
         passport.authenticate('local', { session: false }, (error, user, info) => {
             if (error || !user) {
                 console.log(error);

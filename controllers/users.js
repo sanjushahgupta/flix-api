@@ -1,11 +1,15 @@
-const express = require("express"),
-    userModels = require("../models/users.js"),
-    bodyParser = require("body-parser"),
-    cors = require('cors'),
-    lodAsh = require('lodash'),
-    { check, validationResult } = require('express-validator'),
-    Users = userModels.User,
-    app = express();
+require('../passport.js');
+
+
+const express = require("express");
+const userModels = require("../models/users.js");
+const bodyParser = require("body-parser");
+const cors = require('cors');
+const lodAsh = require('lodash');
+const { check, validationResult } = require('express-validator');
+const Users = userModels.User;
+const app = express();
+const usersService = require('../services/users.js')
 
 app.use(cors());
 app.use(express.static('public'));
@@ -13,52 +17,31 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-require('../config/passport.js');
-
-
 module.exports.registerUser = function (req, res) {
-    let errors = validationResult(req);
-
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ error: errors.array()[0].msg });
     }
-    let hashedPassword = Users.hashPassword(req.body.Password);
 
-    Users.findOne({ userName: req.body.userName })
-        .then(user => {
-            if (user) {
-                return res.status(400).send(req.body.userName + ' already exists');
-            }
+    const userTocreate = {
+        userName: req.body.UserName,
+        email: req.body.Email,
+        birth: req.body.Birth,
+        password: req.body.Password
+    }
 
-            Users.findOne({ Email: req.body.Email })
-                .then(email => {
-                    if (email) {
-                        return res.status(400).send(req.body.Email + ' already exists');
-                    }
+    usersService.registerUser(userTocreate).then(result => {
+        if (typeof result === Object && result.userName !== '') {
+            return res.status(201).json(result);
+        }
 
-                    Users.create({
-                        userName: req.body.userName,
-                        Password: hashedPassword,
-                        Email: req.body.Email,
-                        Birth: req.body.Birth
-                    })
-                        .then(user => {
-                            res.status(201).json(lodAsh.pick(user, ['userName', 'Email', 'Birth']));
-                        })
-                        .catch(error => {
-                            return res.status(500).send("Error: " + error);
-                        });
-                });
-        })
-        .catch(error => {
-            return res.status(400).send("error: " + error);
-        });
+        return res.status(400).send(result);
+    })
 };
 
 
 module.exports.updateUser = function (req, res) {
     let errors = validationResult(req);
-
     if (!errors.isEmpty()) {
         return res.status(422).json({ error: errors.array()[0].msg });
     }
@@ -115,3 +98,8 @@ module.exports.deleteUser = function (req, res) {
             res.status(500).send("Error: " + err);
         });
 };
+
+
+//
+
+
