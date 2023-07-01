@@ -1,5 +1,4 @@
 const express = require("express"),
-    movieModels = require("../models/movies.js"),
     userModels = require("../models/users.js"),
     bodyParser = require("body-parser"),
     cors = require('cors'),

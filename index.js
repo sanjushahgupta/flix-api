@@ -16,8 +16,8 @@ const checkValidation = [
     check('userName', 'Non-alphanumeric characters are not allowed in username').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does not appear to be valid').isEmail()
-],
-    authJWT = authJWT;
+];
+const authJWT = passport.authenticate('jwt', { session: false });
 
 app.use(cors());
 app.use(express.static('public'));
@@ -25,6 +25,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+let auth = require('./controllers/auth.js')(app);
 require('./config/passport.js');
 
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -40,8 +41,6 @@ app.put("/user/:userName", authJWT,
 app.post("/addfab/:userName/:movieTitle", authJWT, movieController.addMovieFavList)
 app.delete("/deletefab/:userName/:movieTitle", authJWT, movieController.deleteMovieFromFavList)
 app.delete("/deleteUser/:userName", authJWT, userController.registerUser)
-
-
 
 app.use(express.static("public"));
 app.use(morgan("combined", { stream: accessLogStream }));

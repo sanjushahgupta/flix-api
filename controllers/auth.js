@@ -3,10 +3,10 @@ const jwtSecret = process.env.MOVIE_JWT_SECRET,
     lodAsh = require('lodash'),
     passport = require('passport');
 
-require('./passport');
+require('../config/passport');
 
 
-let generateJWTToken = (user) => {
+function generateJWTToken(user) {
     return jwt.sign(user, jwtSecret, {
         subject: user.userName,
         expiresIn: '6d',
@@ -28,7 +28,7 @@ module.exports = (router) => {
                 if (error) {
                     res.send(error);
                 }
-                let token = generateJWTToken(user.toJSON());
+                let token = generateJWTToken(lodAsh.pick(user, ['userName', '_id']));
                 let selectedProperties = lodAsh.pick(user, ['userName', 'Email', 'Birth']);
                 return res.json({ user: selectedProperties, token });
             });
