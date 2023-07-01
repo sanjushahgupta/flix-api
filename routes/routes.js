@@ -5,15 +5,15 @@ const { check, validationResult } = require('express-validator');
 
 
 const checkValidation = [
-    check('UserName', 'Username length should be more than 4').isLength({ min: 5 }),
-    check('UserName', 'Non-alphanumeric characters are not allowed in username').isAlphanumeric(),
-    check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').isEmail()
+    check('userName', 'Username length should be more than 4').isLength({ min: 5 }),
+    check('userName', 'Non-alphanumeric characters are not allowed in username').isAlphanumeric(),
+    check('password', 'Password is required').not().isEmpty(),
+    check('email', 'Email does not appear to be valid').isEmail()
 ];
 
 const authJWT = passport.authenticate('jwt', { session: false });
 module.exports = (app) => {
-    app.get('/', (req, res) => { res.send('Movie'); });
+    app.get('/', (res) => { res.send('Movie'); });
     app.get("/movies", authJWT, movieController.listOfMovies)
     app.get("/movies/:title", authJWT, movieController.movieByTitle)
     app.get("/movies/genre/:name", authJWT, movieController.genreDescriptionByName)

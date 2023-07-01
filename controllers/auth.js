@@ -28,7 +28,7 @@ module.exports = (app) => {
                     res.send(error);
                 }
                 let token = generateJWTToken(lodAsh.pick(user, ['userName', '_id']));
-                let selectedProperties = lodAsh.pick(user, ['userName', 'Email', 'Birth']);
+                let selectedProperties = lodAsh.pick(user, ['userName', 'email', 'birth']);
                 return res.json({ user: selectedProperties, token });
             });
         })(req, res);

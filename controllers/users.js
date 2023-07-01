@@ -1,11 +1,9 @@
 require('../passport.js');
 
-
 const express = require("express");
 const userModels = require("../models/users.js");
 const bodyParser = require("body-parser");
 const cors = require('cors');
-const lodAsh = require('lodash');
 const { check, validationResult } = require('express-validator');
 const Users = userModels.User;
 const app = express();
@@ -24,64 +22,40 @@ module.exports.registerUser = function (req, res) {
     }
 
     const userTocreate = {
-        userName: req.body.UserName,
-        email: req.body.Email,
-        birth: req.body.Birth,
-        password: req.body.Password
+        userName: req.body.userName,
+        email: req.body.email,
+        birth: req.body.birth,
+        password: req.body.password
     }
 
     usersService.registerUser(userTocreate).then(result => {
         if (typeof result === Object && result.userName !== '') {
             return res.status(201).json(result);
         }
-
         return res.status(400).send(result);
     })
 };
 
 
 module.exports.updateUser = function (req, res) {
-    let errors = validationResult(req);
+    const userToUpdate = {
+        userName: req.body.userName,
+        password: req.body.password,
+        email: req.body.email,
+        birth: req.body.birth,
+    }
+
+    const oldUserName = req.params.userName
+    let errors = validationResult(userToUpdate);
     if (!errors.isEmpty()) {
         return res.status(422).json({ error: errors.array()[0].msg });
     }
-    Users.findOne({ userName: req.body.userName })
-        .then(user => {
-            if (user && user.userName !== req.params.userName) {
-                return res.status(400).send(req.body.userName + ' already exists');
-            }
-
-            Users.findOne({ Email: req.body.Email })
-                .then(email => {
-                    if (email && email.Email !== req.body.Email) {
-                        return res.status(400).send(req.body.Email + ' already exists');
-                    }
-
-                    Users.findOneAndUpdate(
-                        { userName: req.params.userName },
-                        {
-                            $set: {
-                                userName: req.body.userName,
-                                Password: req.body.Password,
-                                Email: req.body.Email,
-                                Birth: req.body.Birth
-                            }
-                        },
-                        { new: true }
-                    ).then(updatedUser => {
-                        if (updatedUser) {
-                            return res.status(200).json(lodAsh.pick(updatedUser, ['userName', 'Email', 'Birth', 'favoriteMovies']));
-                        } else {
-                            return res.status(400).send("Error:Sorry, unable to update. Please check your credentials.");
-                        }
-                    }).catch(err => {
-                        return res.status(400).send("Error: " + err);
-                    });
-                });
-        })
-        .catch(err => {
-            return res.status(400).send("Error: " + err);
-        });
+    usersService.updateUser(userToUpdate, oldUserName).then(result => {
+        if (typeof result === Object && result.userName !== '') {
+            return res.status(200).json(result);
+        }
+        return res.status(400).send(result);
+    })
 };
 
 
@@ -100,6 +74,6 @@ module.exports.deleteUser = function (req, res) {
 };
 
 
-//
+
 
 
