@@ -40,9 +40,9 @@ module.exports.registerUser = function (req, res) {
 module.exports.updateUser = function (req, res) {
     const userToUpdate = {
         userName: req.body.userName,
-        Password: req.body.password,
-        Email: req.body.email,
-        Birth: req.body.birth,
+        password: req.body.password,
+        email: req.body.email,
+        birth: req.body.birth,
     }
 
     const oldUserName = req.params.userName

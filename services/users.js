@@ -64,8 +64,8 @@ module.exports.updateUser = async (newData, oldUserName) => {
     if (updatedDBUser) {
         return {
             userName: updatedDBUser.userName,
-            email: updatedDBUser.email,
-            birth: updatedDBUser.birth
+            email: updatedDBUser.Email,
+            birth: updatedDBUser.Birth
         }
     }
 
