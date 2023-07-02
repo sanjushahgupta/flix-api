@@ -7,7 +7,7 @@
 - Register new user
 - Update user profiles
 - Add/remove movie to the favorites list
-- Deregister users
+- Deregister user
 
 ## Run Locally
 #### Clone the repository
@@ -23,9 +23,10 @@
 #### Start the development server and run it in a web browser 
 ```bash
  node index.js
+ http://localhost:8000
  ```
  ```bash
-   http://localhost:8000
+   https://movie-api-flix-556e5c313136.herokuapp.com/
 ```
 
 ## Contributions
