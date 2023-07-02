@@ -23,5 +23,5 @@ module.exports = (app) => {
     app.post("/addfab/:movieTitle", authJWT, movieController.addMovieFavList)
     app.delete("/deletefab/:movieTitle", authJWT, movieController.deleteMovieFromFavList)
     app.delete("/deleteUser", authJWT, userController.deleteUser)
-    app.get('/', (res) => { res.send('Movie'); });
+    app.get('/', (req, res) => { res.send('Welcome to movieApi') });
 }
