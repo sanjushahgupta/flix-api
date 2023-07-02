@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>documentation.html</title>
-    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link rel="stylesheet" type="text/css" href="../styles/style.css">
 </head>
 
 <body>
@@ -19,18 +19,20 @@
             <th>Business Logic</th>
             <th>URL</th>
             <th>HTTP Method</th>
+            <th>Request Header</th>
             <th>Path Parameters</th>
             <th>Request body data format</th>
             <th>Response body data format</th>
         </tr>
 
         <tr>
-            <td>Get a data about single movie by title</td>
+            <td>Get movie data by title</td>
             <td>/movies/:title</td>
             <td>GET</td>
+            <td>Authorization: Bearer Token</td>
             <td>title:String</td>
             <td>None</td>
-            <td>Json object holding data about movie.
+            <td>Json object holding data about movie<br>
                 {Title:String,
                 Description: String,
                 Genre: {
@@ -45,21 +47,6 @@
                 Actor: String,
                 Image: String,
                 Featured: Boolean}<br>
-                Eg: {Title:"Titanic",
-                Description:"It is a 1997 American epic romance."",
-                Genre: {
-                Name: "Romance",
-                Description:"It is based on accounts of the sinking of RMS Titanic."
-                },
-                Director: {
-                Name: "James Cameron",
-                Bio:"He is also film director and screenwriter." ,
-                Birth: "1954",
-                },
-                Actor: "Leonardo DiCaprio",
-                Image: "titanic.png",
-                Featured: false}
-
             </td>
         </tr>
 
@@ -67,10 +54,11 @@
             <td>Get a list of all movies</td>
             <td>/movies</td>
             <td>GET</td>
+            <td>Authorization: Bearer Token</td>
             <td>None</td>
             <td>None</td>
-            <td>Json object holding data about all the movies
-                (list of movies with movie details including movie's escription, genre, director, image URL, whether
+            <td>Json object holding data about all the movies.<br>
+                (list of movies with movie details including movie's description, genre, director, image URL, whether
                 it’s
                 featured or not)</td>
         </tr>
@@ -79,78 +67,92 @@
             <td>/register</td>
             <td>POST</td>
             <td>None</td>
-            <td>Json object holding data about user({userName:String,
+            <td>None</td>
+            <td>Json object holding data about user<br>
+                {userName:String,
                 password: String,
                 email: String,
-                birth: String}eg:
-                { "userName": "Avi", "Password": "127%hj34@6", "email":"abhi@gmail.com", "birth": "1990-02-13"})</td>
-            <td>Json object holding data about added use, including ID and favourites movies array
-                (id,userName,email,birth,favoritesMovies)
-                eg:{
-                "userName": "Avi",
-                "email": "abhi@gmail.com",
-                "birth": "1990-02-13",
-                "favoriteMovies": [],
-                "_id": "649b15eb9c3c29ba3c3c257a",
-                "__v": 0
+                birth: String}</td>
+            <td>Json object holding data about user<br>
+                {userName:String,
+                email: String,
+                birth: String
                 }
             </td>
         </tr>
         <tr>
-            <td>Get genre's description about a genre by name</td>
-            <td>/movies/genre/:name</td>
-            <td>GET</td>
-            <td>name:String</td>
+            <td>User Login</td>
+            <td>/login</td>
+            <td>POST</td>
             <td>None</td>
-            <td>Description of specific genre.
-                "It is a biographical drama based on the life of South Indian actress Savitri."</td>
+            <td>None</td>
+            <td>Json object holding data about user<br> {userName:String,
+                password: String}
+            </td>
+            <td>Json object holding data about added user<br>
+                user:{
+                userName: String,
+                email: String,
+                birth: String,
+                id:String
+                },<br>
+                token:String
+            </td>
         </tr>
         <tr>
-            <td>Get data about a director by name</td>
-            <td>/movies/directors/:name</td>
+            <td>Get genre's description by genre's name</td>
+            <td>/movies/genre/:name</td>
             <td>GET</td>
+            <td>Authorization: Bearer Token</td>
             <td>name:String</td>
             <td>None</td>
-            <td>Json object holding data about specific director(director's name,bio,birthdate)
-                eg:{
-                "Name": "Sukumar",
-                "Bio": "Sukumar is a talented South Indian filmmaker known for his unique storytelling and innovative
-                approach to filmmaking.",
-                "Birth": "1970-01-10T23:00:00.000Z"
+            <td>Description of specific genre in String</td>
+        </tr>
+        <tr>
+            <td>Get director's details by director's name</td>
+            <td>/movies/directors/:name</td>
+            <td>GET</td>
+            <td>Authorization: Bearer Token</td>
+            <td>name:String</td>
+            <td>None</td>
+            <td>Json object holding data about specific director(director's name,bio,birthdate)<br>
+                {
+                Name: String,
+                Bio : String,
+                Birth : String
                 }
             </td>
         </tr>
 
         <tr>
-            <td>Update their user info</td>
-            <td>/updateUser/</td>
+            <td>Update user's data</td>
+            <td>/updateUser</td>
             <td>PUT</td>
+            <td>Authorization: Bearer Token</td>
             <td>None</td>
             <td>{userName:String,
                 email: String,
                 birth: String}
-                eg: { "userName": "Abhir","Birth": "1990-02-13"}</td>
-            <td>Json object holding updated user's information(id,userName,Email,Birth,favoritesMovies[])
-                eg:{
-                "id": "649b15da9c3c29ba3c3c2577",
-                "userName": "Abhir",
-                "email": "abhi@gmail.com",
-                "birth": "1990-02-13",
-                "favoriteMovies": [],
-                "__v": 0
-                }.</td>
+            </td>
+            <td>Json object holding updated user's information(Updated userName,email,birth)<br>
+                {
+                userName : String,
+                email : String,
+                birth : String
+                }</td>
         </tr>
         <tr>
             <td>Add movie to favourite list</td>
             <td>/addfab/:movieTitle</td>
             <td>POST</td>
+            <td>Authorization: Bearer Token</td>
             <td>movieTitle:String</td>
             <td>None</td>
-            <td>User's json object with new movie added(userName,favoritesMovies[ref:newMovie])
-                eg: {
-                "userName": "Abhir",
-                "favoriteMovies": [
-                "64996bafcfb9285bf3b083fb",
+            <td>User's json object with new movie added(userName,favoritesMovies[ref:newMovie])<br>
+                {
+                userName : String,
+                favoriteMovies : [
+                String
                 ]
                 }
             </td>
@@ -159,22 +161,21 @@
             <td>Remove movie from favourite list</td>
             <td>/deletefab/:movieTitle</td>
             <td>DELETE</td>
+            <td>Authorization: Bearer Token</td>
             <td>movieTitle:String</td>
             <td>None</td>
             <td>User's json object without requested
-                movie i.e(userName,favoritesMovies[ref])
+                movie i.e(userName,favoritesMovies[])<br>
                 {
-                "userName": "Abhir",
-                "favoriteMovies": [
-                "64996bafcfb9285bf3b083fb",
-                "64996967cfb9285bf3b083f8"
-                ]
+                userName : String,
+                favoriteMovies : []
                 }</td>
         </tr>
         <tr>
             <td>Deregister existing user</td>
             <td>/deleteUser</td>
             <td>DELETE</td>
+            <td>Authorization: Bearer Token</td>
             <td>None</td>
             <td>None</td>
             <td>Text message indicating a requested account has been removed.
