@@ -3,9 +3,10 @@ const LocalStrategy = require('passport-local').Strategy;
 const userModel = require('./models/users.js');
 const passportJWT = require('passport-jwt');
 
-let Users = userModel.User;
-let JWTStrategy = passportJWT.Strategy;
-let ExtractJWT = passportJWT.ExtractJwt;
+const Users = userModel.User;
+const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
+
 
 passport.use(
     new LocalStrategy(
@@ -14,26 +15,28 @@ passport.use(
             passwordField: 'password',
         },
         (userName, password, callback) => {
-            console.log('going to find users')
             Users.findOne({ userName: userName })
                 .then((user) => {
                     if (!user) {
-                        console.log('user not found');
                         return callback(null, false, { message: 'Incorrect username.' });
                     }
 
                     if (!user.validatePassword(password)) {
-                        console.log('incorrect password');
                         return callback(null, false, { message: 'Incorrect password.' });
                     }
-                    return callback(null, user);
+                    return callback(null, {
+                        userName: user.userName,
+                        email: user.Email,
+                        birth: user.Birth,
+                        id: user._id,
+                    });
                 }).catch(error => {
                     return callback(error);
                 });
         }
     )
 );
-
+//for other requests
 passport.use(
     new JWTStrategy(
         {
@@ -41,7 +44,7 @@ passport.use(
             secretOrKey: process.env.MOVIE_JWT_SECRET,
         },
         (jwtPayload, callback) => {
-            Users.findById(jwtPayload._id)
+            Users.findById(jwtPayload.id)
                 .then((user) => {
                     return callback(null, user);
                 })
@@ -51,3 +54,4 @@ passport.use(
         }
     )
 );
+

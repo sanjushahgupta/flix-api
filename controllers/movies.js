@@ -1,10 +1,5 @@
 const express = require("express");
-const movieModels = require("../models/movies.js");
-const userModels = require("../models/users.js");
 const bodyParser = require("body-parser");
-const lodAsh = require('lodash');
-const Movies = movieModels.Movie;
-const Users = userModels.User;
 const movieServices = require('../services/movies.js')
 const app = express();
 const cors = require('cors');
@@ -15,9 +10,9 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-require('../passport.js');
 
 module.exports.listOfMovies = function (req, res) {
+
     movieServices.listOfAllMovies().then(result => {
         if (Array.isArray(result) && result.length > 0) {
             return res.status(201).json(result);
@@ -46,71 +41,49 @@ module.exports.genreDescriptionByName = function (req, res) {
             return res.status(400).send(result.message);
         }
         return res.status(201).json(result);
-
     }).catch(error => {
         return "Error:" + error;
     })
 }
 
 module.exports.directorDetailsByName = function (req, res) {
-    Movies.findOne({ "Director.Name": req.params.name }).
-        then(movie => {
-            var directorDetails = movie.Director
-            return res.status(200).json(directorDetails);
-        }).catch(err => {
-            return res.status(500).send("Error: Sorry, the director's details of requested movie were not found.");
-        })
+    movieServices.directorDetailsByName(req.params.name).then(result => {
+        if (result instanceof Error) {
+            return res.status(400).send(result.message);
+        }
+        return res.status(201).json(result);
+
+    }).catch(error => {
+        return "Error:" + error;
+    })
 }
 
 module.exports.addMovieFavList = function (req, res) {
-    Movies.findOne({ Title: req.params.movieTitle })
-        .then(movie => {
-            addFavMovie(movie)
-        })
-        .catch(err => {
-            res.status(500).send(err);
-        });
+    //console.log("geting username from request", req.user)
+    userName = req.user.userName
+    movieServices.addFavMovie(req.params.movieTitle, userName).then(result => {
+        if (result instanceof Error) {
+            return res.status(400).send(result.message);
+        }
+        return res.status(201).json({ "userName": result.userName, "favoriteMovies": result.favoriteMovies });
+
+    }).catch(error => {
+        return "Error:" + error;
+    })
+
 }
 
 module.exports.deleteMovieFromFavList = function (req, res) {
-    Movies.findOne({ Title: req.params.movieTitle }).
-        then(movie => {
-            deleteFavMovie(movie)
-        }).catch(err => {
-            return res.status(500).send("Error:" + err);
-        })
+    console.log("inside deleteMovieFromFavList ")
+    userName = req.user.userName
+    movieServices.deleteFavMovie(req.params.movieTitle, userName).then(result => {
+        if (result instanceof Error) {
+            return res.status(400).send(result.message);
+        }
+        return res.status(201).json({ "userName": result.userName, "favoriteMovies": result.favoriteMovies });
+
+    }).catch(error => {
+        return "Error:" + error;
+    })
 }
 
-function addFavMovie(movie) {
-    if (movie) {
-        const movieId = movie._id;
-        Users.findOneAndUpdate(
-            { userName: req.params.userName },
-            { $addToSet: { favoriteMovies: movieId } },
-            { new: true }
-        )
-            .then(user => {
-                res.status(201).json(lodAsh.pick(user, ['userName', 'favoriteMovies']));
-            })
-            .catch(err => {
-                res.status(400).send("Error:" + err);
-            });
-    } else {
-        res.status(400).send("Error: Requested movie was not found.");
-    }
-}
-
-function deleteFavMovie(movie) {
-    if (movie) {
-        const movieId = movie._id
-        Users.findOneAndUpdate({ userName: req.params.userName },
-            { $pull: { favoriteMovies: movieId } },
-            { new: true }).then(user => {
-                return res.status(200).json(lodAsh.pick(user, ['userName', 'favoriteMovies']))
-            }).catch(err => {
-                return res.status(500).send(err);
-            })
-    } else {
-        return res.status(500).send("Error: Requested movie was not found.")
-    }
-}

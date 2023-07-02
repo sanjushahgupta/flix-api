@@ -2,6 +2,7 @@ const passport = require('passport');
 const userController = require('../controllers/users.js');
 const movieController = require('../controllers/movies.js');
 const { check, validationResult } = require('express-validator');
+
 const authJWT = passport.authenticate('jwt', { session: false });
 
 const checkValidation = [

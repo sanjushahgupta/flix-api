@@ -1,19 +1,67 @@
 const movieModels = require('../models/movies.js')
+const userModels = require('../models/users.js')
 
 module.exports.listOfAllMovies = async () => {
     const listOfMovies = await movieModels.Movie.find();
-    return listOfMovies;
+    if (listOfMovies) {
+        return listOfMovies;
+    }
+    return new Error("Error: Sorry, movies not found.");
 }
 
 module.exports.getMovieByTitle = async (Title) => {
-    const movie = await movieModels.Movie.find({ "Title": Title })
-    return movie;
+    const matchedMovieByTitle = await movieModels.Movie.find({ "Title": Title })
+    if (matchedMovieByTitle) {
+        return matchedMovieByTitle;
+    }
+    return new Error("Error: Sorry, Requested movie not found.");
 }
 
 module.exports.genreDescriptionByName = async (genreName) => {
-    const movie = await movieModels.Movie.findOne({ "Genre.Name": genreName });
-    if (movie) {
-        return movie.Genre.Description;
+    const matchedMovieByGenreName = await movieModels.Movie.findOne({ "Genre.Name": genreName });
+    if (matchedMovieByGenreName) {
+        return matchedMovieByGenreName.Genre.Description;
     }
-    return new Error("Error: Sorry, Requested movie not found.");
+    return new Error("Error: Sorry, Requested movie and it's genre details not found.");
+}
+
+module.exports.directorDetailsByName = async (directorName) => {
+    const matchedMovieByDirectorName = await movieModels.Movie.findOne({ "Director.Name": directorName });
+    if (matchedMovieByDirectorName) {
+        return matchedMovieByDirectorName.Director;
+    }
+    return new Error("Error: Sorry, Requested movie and it's director details not found.");
+}
+
+module.exports.addFavMovie = async (movieTitle, userName) => {
+    const movie = await movieModels.Movie.findOne({ "Title": movieTitle });
+    if (movie) {
+        const movieId = await movie._id;
+        const movieAddedInFav = await userModels.User.findOneAndUpdate(
+            { userName: userName },
+            { $addToSet: { favoriteMovies: movieId } },
+            { new: true }
+        )
+        if (movieAddedInFav) {
+            return movieAddedInFav;
+        }
+    }
+    return new Error("Error: Sorry, unable to add movie in favourite list.");
+}
+
+module.exports.deleteFavMovie = async (movieTitle, userName) => {
+    const movieToDelete = await movieModels.Movie.findOne({ "Title": movieTitle });
+    if (movieToDelete) {
+        console.log('id', movieToDelete._id)
+        const movieId = await movieToDelete._id
+        const movieDeleted = await userModels.User.findOneAndUpdate({ userName: userName },
+            { $pull: { favoriteMovies: movieId } },
+            { new: true })
+
+        if (movieDeleted) {
+            return movieDeleted
+        }
+        return new Error("delete movie from favourites list")
+    }
+    return new Error("Unable to delete movie from favourites list")
 }
