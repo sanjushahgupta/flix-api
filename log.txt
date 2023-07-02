@@ -46,3 +46,5 @@
 127.0.0.1 - - [02/Jul/2023:12:11:07 +0000] "POST / HTTP/1.1" 404 140 "-" "PostmanRuntime/7.32.3"
 127.0.0.1 - - [02/Jul/2023:12:11:18 +0000] "POST / HTTP/1.1" 404 140 "-" "PostmanRuntime/7.32.3"
 127.0.0.1 - - [02/Jul/2023:12:48:48 +0000] "PUT /login?updateUser HTTP/1.1" 404 144 "-" "PostmanRuntime/7.32.3"
+127.0.0.1 - - [02/Jul/2023:13:27:12 +0000] "POST /addfab/prava/Rangasthalam HTTP/1.1" 404 165 "-" "PostmanRuntime/7.32.3"
+127.0.0.1 - - [02/Jul/2023:13:28:37 +0000] "DELETE /deleteUser/prava HTTP/1.1" 404 158 "-" "PostmanRuntime/7.32.3"

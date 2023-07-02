@@ -73,7 +73,6 @@ module.exports.addMovieFavList = function (req, res) {
 
 module.exports.deleteMovieFromFavList = function (req, res) {
     userName = req.user.userName
-    console.log(userName)
     movieServices.deleteFavMovie(req.params.movieTitle, userName).then(result => {
         if (result instanceof Error) {
             return res.status(400).send(result.message);

@@ -55,7 +55,7 @@ module.exports.updateUser = async (newData, oldUserName) => {
                 Birth: newData.birth
             }
         },
-        { new: true }
+        { new: true },
     );
     if (updatedDBUser) {
         return {

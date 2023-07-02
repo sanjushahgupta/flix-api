@@ -40,7 +40,7 @@ module.exports.registerUser = function (req, res) {
 module.exports.updateUser = function (req, res) {
     const userToUpdate = {
         userName: req.body.userName,
-        password: req.body.password,
+
         email: req.body.email,
         birth: req.body.birth,
     }
@@ -52,10 +52,10 @@ module.exports.updateUser = function (req, res) {
     }
 
     usersService.updateUser(userToUpdate, oldUserName).then(result => {
-        if (typeof result === Object && result.userName !== '') {
-            return res.status(200).json(result);
+        if (result instanceof Error) {
+            return res.status(400).send(result.message);
         }
-        return res.status(400).send(result);
+        return res.status(200).json(result);
     }).catch(error => {
         return "Error:", error;
     })
