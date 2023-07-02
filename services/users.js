@@ -3,8 +3,6 @@ const lodash = require('lodash');
 
 module.exports.registerUser = async (userTocreate) => {
     let hashedPassword = userModels.User.hashPassword(userTocreate.password);
-
-
     const userWithMatchingUserName = await userModels.User.findOne({ userName: userTocreate.userName });
     if (userWithMatchingUserName) {
         return 'userName already exists';
@@ -23,13 +21,13 @@ module.exports.registerUser = async (userTocreate) => {
     });
 
     if (newlyCreatedDBUser) {
+        //to make lowercase eg:email in all application-> in db  :EMail
         return {
             userName: newlyCreatedDBUser.userName,
             email: newlyCreatedDBUser.Email,
             birth: newlyCreatedDBUser.Birth,
         }
     }
-
     return new Error('Unable to create account.')
 }
 
@@ -38,12 +36,10 @@ module.exports.updateUser = async (newData, oldUserName) => {
     if (userWithMatchingUserName) {
         return userWithMatchingUserName.userName + ' already exists';
     }
-
     const oldUser = await userModels.User.findOne({ userName: oldUserName });
     if (!oldUser) {
         return oldUserName + ' does not exist';
     }
-
     const userWithMatchingEmail = await userModels.User.findOne({ Email: newData.email });
     if (userWithMatchingEmail) {
         return userWithMatchingEmail.Email + ' already exist';

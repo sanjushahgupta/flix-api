@@ -14,14 +14,14 @@ const checkValidation = [
 
 
 module.exports = (app) => {
-    app.get('/', (res) => { res.send('Movie'); });
     app.get("/movies", authJWT, movieController.listOfMovies)
     app.get("/movies/:title", authJWT, movieController.movieByTitle)
     app.get("/movies/genre/:name", authJWT, movieController.genreDescriptionByName)
     app.get("/movies/directors/:name", authJWT, movieController.directorDetailsByName)
     app.post("/register", checkValidation, userController.registerUser)
-    app.put("/user/:userName", authJWT, checkValidation, userController.updateUser)
-    app.post("/addfab/:userName/:movieTitle", authJWT, movieController.addMovieFavList)
-    app.delete("/deletefab/:userName/:movieTitle", authJWT, movieController.deleteMovieFromFavList)
-    app.delete("/deleteUser/:userName", authJWT, userController.deleteUser)
+    app.put("/updateUser", authJWT, checkValidation, userController.updateUser)
+    app.post("/addfab/:movieTitle", authJWT, movieController.addMovieFavList)
+    app.delete("/deletefab/:movieTitle", authJWT, movieController.deleteMovieFromFavList)
+    app.delete("/deleteUser", authJWT, userController.deleteUser)
+    app.get('/', (res) => { res.send('Movie'); });
 }

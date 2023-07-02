@@ -52,7 +52,6 @@ module.exports.addFavMovie = async (movieTitle, userName) => {
 module.exports.deleteFavMovie = async (movieTitle, userName) => {
     const movieToDelete = await movieModels.Movie.findOne({ "Title": movieTitle });
     if (movieToDelete) {
-        console.log('id', movieToDelete._id)
         const movieId = await movieToDelete._id
         const movieDeleted = await userModels.User.findOneAndUpdate({ userName: userName },
             { $pull: { favoriteMovies: movieId } },

@@ -12,14 +12,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 module.exports.listOfMovies = function (req, res) {
-
     movieServices.listOfAllMovies().then(result => {
         if (Array.isArray(result) && result.length > 0) {
             return res.status(201).json(result);
         }
         return res.status(400).send('Unable to fetch Movies.');
     }).catch(error => {
-        return "Error:" + error;
+        return "Error:", error
     })
 }
 
@@ -31,7 +30,7 @@ module.exports.movieByTitle = function (req, res) {
             return res.status(500).send("Error: Sorry, the requested movie was not found.");
         }
     }).catch(error => {
-        return "Error:" + error;
+        return "Error:", error;
     })
 }
 
@@ -42,7 +41,7 @@ module.exports.genreDescriptionByName = function (req, res) {
         }
         return res.status(201).json(result);
     }).catch(error => {
-        return "Error:" + error;
+        return "Error:", error;
     })
 }
 
@@ -54,12 +53,11 @@ module.exports.directorDetailsByName = function (req, res) {
         return res.status(201).json(result);
 
     }).catch(error => {
-        return "Error:" + error;
+        return "Error:", error;
     })
 }
 
 module.exports.addMovieFavList = function (req, res) {
-    //console.log("geting username from request", req.user)
     userName = req.user.userName
     movieServices.addFavMovie(req.params.movieTitle, userName).then(result => {
         if (result instanceof Error) {
@@ -68,14 +66,14 @@ module.exports.addMovieFavList = function (req, res) {
         return res.status(201).json({ "userName": result.userName, "favoriteMovies": result.favoriteMovies });
 
     }).catch(error => {
-        return "Error:" + error;
+        return "Error:", error;
     })
 
 }
 
 module.exports.deleteMovieFromFavList = function (req, res) {
-    console.log("inside deleteMovieFromFavList ")
     userName = req.user.userName
+    console.log(userName)
     movieServices.deleteFavMovie(req.params.movieTitle, userName).then(result => {
         if (result instanceof Error) {
             return res.status(400).send(result.message);
@@ -83,7 +81,7 @@ module.exports.deleteMovieFromFavList = function (req, res) {
         return res.status(201).json({ "userName": result.userName, "favoriteMovies": result.favoriteMovies });
 
     }).catch(error => {
-        return "Error:" + error;
+        return "Error:", error;
     })
 }
 

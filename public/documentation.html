@@ -80,16 +80,16 @@
             <td>POST</td>
             <td>None</td>
             <td>Json object holding data about user({userName:String,
-                Password: String,
-                Email: String,
-                Birth: String}eg:
-                { "userName": "Avi", "Password": "127%hj34@6", "Email":"abhi@gmail.com", "Birth": "1990-02-13"})</td>
+                password: String,
+                email: String,
+                birth: String}eg:
+                { "userName": "Avi", "Password": "127%hj34@6", "email":"abhi@gmail.com", "birth": "1990-02-13"})</td>
             <td>Json object holding data about added use, including ID and favourites movies array
-                (id,userName,Email,Birth,favoritesMovies)
+                (id,userName,email,birth,favoritesMovies)
                 eg:{
                 "userName": "Avi",
-                "Email": "abhi@gmail.com",
-                "Birth": "1990-02-13",
+                "email": "abhi@gmail.com",
+                "birth": "1990-02-13",
                 "favoriteMovies": [],
                 "_id": "649b15eb9c3c29ba3c3c257a",
                 "__v": 0
@@ -123,33 +123,31 @@
 
         <tr>
             <td>Update their user info</td>
-            <td>/user/:userName</td>
+            <td>/updateUser/</td>
             <td>PUT</td>
-            <td>userName:String</td>
+            <td>None</td>
             <td>{userName:String,
-                Password: String,
-                Email: String,
-                Birth: String}
-                eg: { "userName": "Abhir", "Password": "127%34@6", "Birth": "1990-02-13"}</td>
+                email: String,
+                birth: String}
+                eg: { "userName": "Abhir","Birth": "1990-02-13"}</td>
             <td>Json object holding updated user's information(id,userName,Email,Birth,favoritesMovies[])
                 eg:{
-                "_id": "649b15da9c3c29ba3c3c2577",
+                "id": "649b15da9c3c29ba3c3c2577",
                 "userName": "Abhir",
-                "Email": "abhi@gmail.com",
-                "Birth": "1990-02-13",
+                "email": "abhi@gmail.com",
+                "birth": "1990-02-13",
                 "favoriteMovies": [],
                 "__v": 0
                 }.</td>
         </tr>
         <tr>
             <td>Add movie to favourite list</td>
-            <td>/addfab/:userName/:movieTitle</td>
+            <td>/addfab/:movieTitle</td>
             <td>POST</td>
-            <td>userName:String, movieTitle:String</td>
+            <td>movieTitle:String</td>
             <td>None</td>
-            <td>User's json object with new movie added(id,userName,favoritesMovies[ref:newMovie])
+            <td>User's json object with new movie added(userName,favoritesMovies[ref:newMovie])
                 eg: {
-                "_id": "649990b8cfb9285bf3b0840a",
                 "userName": "Abhir",
                 "favoriteMovies": [
                 "64996bafcfb9285bf3b083fb",
@@ -159,9 +157,9 @@
         </tr>
         <tr>
             <td>Remove movie from favourite list</td>
-            <td>/deletefab/:userName/:movieTitle</td>
+            <td>/deletefab/:movieTitle</td>
             <td>DELETE</td>
-            <td>userName:String,movieTitle:String</td>
+            <td>movieTitle:String</td>
             <td>None</td>
             <td>User's json object without requested
                 movie i.e(userName,favoritesMovies[ref])
@@ -175,9 +173,9 @@
         </tr>
         <tr>
             <td>Deregister existing user</td>
-            <td>/deleteUser/:userName</td>
+            <td>/deleteUser</td>
             <td>DELETE</td>
-            <td>userName:String</td>
+            <td>None</td>
             <td>None</td>
             <td>Text message indicating a requested account has been removed.
                 eg: Account deleted.
