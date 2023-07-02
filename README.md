@@ -22,7 +22,7 @@
 
 #### Start the development server and run it in a web browser 
 ```bash
-  node server.js
+ node index.js
  ```
  ```bash
    http://localhost:8000
