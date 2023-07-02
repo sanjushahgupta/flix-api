@@ -36,3 +36,4 @@
 127.0.0.1 - - [01/Jul/2023:09:10:51 +0000] "GET /movies/Eega HTTP/1.1" 404 150 "-" "PostmanRuntime/7.32.3"
 127.0.0.1 - - [01/Jul/2023:09:11:44 +0000] "GET /movies/Eega HTTP/1.1" 404 150 "-" "PostmanRuntime/7.32.3"
 127.0.0.1 - - [01/Jul/2023:09:12:28 +0000] "GET /movies/genre/Biographical%20drama HTTP/1.1" 404 172 "-" "PostmanRuntime/7.32.3"
+127.0.0.1 - - [02/Jul/2023:06:05:17 +0000] "GET /register HTTP/1.1" 404 147 "-" "PostmanRuntime/7.32.3"

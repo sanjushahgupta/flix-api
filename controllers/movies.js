@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const lodAsh = require('lodash');
 const Movies = movieModels.Movie;
 const Users = userModels.User;
+const movieServices = require('../services/movies.js')
 const app = express();
 const cors = require('cors');
 
@@ -17,32 +18,38 @@ app.use(bodyParser.urlencoded({ extended: true }));
 require('../passport.js');
 
 module.exports.listOfMovies = function (req, res) {
-    Movies.find()
-        .then(movies => {
-            return res.status(201).json(movies);
-        })
-        .catch(err => {
-            return res.status(500).send("Error: " + err);
-        });
+    movieServices.listOfAllMovies().then(result => {
+        if (Array.isArray(result) && result.length > 0) {
+            return res.status(201).json(result);
+        }
+        return res.status(400).send('Unable to fetch Movies.');
+    }).catch(error => {
+        return "Error:" + error;
+    })
 }
 
 module.exports.movieByTitle = function (req, res) {
-    Movies.find({ "Title": req.params.title })
-        .then(movie => {
-            return res.status(201).json(movie);
-        }).catch(err => {
+    movieServices.getMovieByTitle(req.params.title).then(result => {
+        if (typeof result === 'object' && result.length > 0) {
+            return res.status(201).json(result);
+        } else {
             return res.status(500).send("Error: Sorry, the requested movie was not found.");
-        })
+        }
+    }).catch(error => {
+        return "Error:" + error;
+    })
 }
 
 module.exports.genreDescriptionByName = function (req, res) {
-    Movies.findOne({ "Genre.Name": req.params.name })
-        .then(movie => {
-            var genreDescription = movie.Genre.Description;
-            return res.status(201).json(genreDescription);
-        }).catch(err => {
-            return res.status(500).send("Error: Sorry, the genre of requested movie was not found.");
-        })
+    movieServices.genreDescriptionByName(req.params.name).then(result => {
+        if (result instanceof Error) {
+            return res.status(400).send(result.message);
+        }
+        return res.status(201).json(result);
+
+    }).catch(error => {
+        return "Error:" + error;
+    })
 }
 
 module.exports.directorDetailsByName = function (req, res) {
