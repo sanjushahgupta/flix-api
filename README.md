@@ -1,8 +1,8 @@
 # FlixAPI [![made-with-javascript](https://img.shields.io/badge/Made%20with-JavaScript-1f425f.svg)](https://www.javascript.com)
  FlixAPI is an API that allows users to access movie details and information.
  
-## Planned Features
-- Retrieve list of movies
+## Features
+- Retrieve lists of movies
 - Retrieve details of movies
 - Register new user
 - Update user profiles
