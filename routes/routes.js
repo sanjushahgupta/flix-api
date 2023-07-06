@@ -14,7 +14,8 @@ const checkValidation = [
 
 
 module.exports = (app) => {
-    app.get("/movies", authJWT, movieController.listOfMovies)
+    //removed auth from route movies->movies/authJWT
+    app.get("/movies", movieController.listOfMovies)
     app.get("/movies/:title", authJWT, movieController.movieByTitle)
     app.get("/movies/genre/:name", authJWT, movieController.genreDescriptionByName)
     app.get("/movies/directors/:name", authJWT, movieController.directorDetailsByName)
