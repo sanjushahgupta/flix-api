@@ -27,10 +27,10 @@ module.exports.registerUser = function (req, res) {
     }
 
     usersService.registerUser(userTocreate).then(result => {
-        if (typeof result === Object && result.userName !== '') {
-            return res.status(201).json(result);
+        if (result instanceof Error) {
+            return res.status(400).send(result.message);
         }
-        return res.status(400).json(result);
+        return res.status(200).json(result);
     }).catch(error => {
         return "Error:", error;
     })
