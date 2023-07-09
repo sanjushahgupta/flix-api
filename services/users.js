@@ -2,33 +2,38 @@ const userModels = require('../models/users.js')
 const lodash = require('lodash');
 
 module.exports.registerUser = async (userTocreate) => {
-    let hashedPassword = userModels.User.hashPassword(userTocreate.password);
-    const userWithMatchingUserName = await userModels.User.findOne({ userName: userTocreate.userName });
-    if (userWithMatchingUserName) {
-        return 'userName already exists';
-    }
-
-    const userWithMatchingEmail = await userModels.User.findOne({ Email: userTocreate.email })
-    if (userWithMatchingEmail) {
-        return 'email  already exists';
-    }
-
-    const newlyCreatedDBUser = await userModels.User.create({
-        userName: userTocreate.userName,
-        Email: userTocreate.email,
-        Birth: userTocreate.birth,
-        Password: hashedPassword
-    });
-
-    if (newlyCreatedDBUser) {
-        //to make lowercase eg:email in all application-> in db  :EMail
-        return {
-            userName: newlyCreatedDBUser.userName,
-            email: newlyCreatedDBUser.Email,
-            birth: newlyCreatedDBUser.Birth,
+    try {
+        let hashedPassword = userModels.User.hashPassword(userTocreate.password);
+        const userWithMatchingUserName = await userModels.User.findOne({ userName: userTocreate.userName });
+        if (userWithMatchingUserName) {
+            throw new Error('Username already exists');
         }
+
+        const userWithMatchingEmail = await userModels.User.findOne({ Email: userTocreate.email })
+        if (userWithMatchingEmail) {
+            throw new Error('Email already exists');
+        }
+
+        const newlyCreatedDBUser = await userModels.User.create({
+            userName: userTocreate.userName,
+            Email: userTocreate.email,
+            Birth: userTocreate.birth,
+            Password: hashedPassword
+        });
+
+        if (newlyCreatedDBUser) {
+            //to make lowercase eg:email in all application-> in db  :EMail
+            return {
+                userName: newlyCreatedDBUser.userName,
+                email: newlyCreatedDBUser.Email,
+                birth: newlyCreatedDBUser.Birth,
+            }
+        } else {
+            throw new Error('Unable to create account.')
+        }
+    } catch (error) {
+        throw new Error(error.message);
     }
-    return new Error('Unable to create account.')
 }
 
 module.exports.updateUser = async (newData, oldUserName) => {

@@ -26,14 +26,13 @@ module.exports.registerUser = function (req, res) {
         password: req.body.password
     }
 
-    usersService.registerUser(userTocreate).then(result => {
-        if (result instanceof Error) {
-            return res.status(400).send(result.message);
-        }
-        return res.status(200).json(result);
-    }).catch(error => {
-        return "Error:", error;
-    })
+    usersService.registerUser(userTocreate)
+        .then(result => {
+            return res.status(200).json(result);
+        })
+        .catch(error => {
+            return res.status(400).send(error.message);
+        });
 };
 
 
