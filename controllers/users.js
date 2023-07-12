@@ -55,12 +55,14 @@ module.exports.updateUser = function (req, res) {
     }
 
     const oldUserName = req.user.userName
+    const oldEmail = req.user.Email
+
     let errors = validationResult(userToUpdate);
     if (!errors.isEmpty()) {
         return res.status(422).json({ error: errors.array()[0].msg });
     }
 
-    usersService.updateUser(userToUpdate, oldUserName).then(result => {
+    usersService.updateUser(userToUpdate, oldUserName, oldEmail).then(result => {
         return res.status(200).json(result);
     })
         .catch(error => {

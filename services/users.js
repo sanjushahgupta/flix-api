@@ -44,23 +44,24 @@ module.exports.registerUser = async (userTocreate) => {
     }
 }
 
-module.exports.updateUser = async (newData, oldUserName) => {
+module.exports.updateUser = async (newData, oldUserName, oldEmail) => {
     try {
         const userWithMatchingUserName = await userModels.User.findOne({ userName: newData.userName });
         if (userWithMatchingUserName) {
-            if (userWithMatchingUserName !== req.userName) {
-                throw new Error(userWithMatchingUserName.userName + ' already exists');
+            if (userWithMatchingUserName.userName !== oldUserName) {
+                throw new Error("Username must be unique.");
             }
-
+            const userWithMatchingEmail = await userModels.User.findOne({ Email: newData.email });
+            if (userWithMatchingEmail !== null)
+                if (userWithMatchingEmail.Email !== oldEmail) {
+                    throw new Error("Email must be unique.");
+                }
         }
         const oldUser = await userModels.User.findOne({ userName: oldUserName });
         if (!oldUser) {
             throw new Error(oldUserName + ' does not exist');
         }
-        const userWithMatchingEmail = await userModels.User.findOne({ Email: newData.email });
-        if (userWithMatchingEmail !== req.email) {
-            throw new Error(userWithMatchingEmail.Email + ' already exist');
-        }
+
 
         const updatedDBUser = await userModels.User.findOneAndUpdate(
             { userName: oldUserName },
