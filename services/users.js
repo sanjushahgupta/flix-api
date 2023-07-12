@@ -1,6 +1,14 @@
 const userModels = require('../models/users.js')
 const lodash = require('lodash');
 
+module.exports.listOfAllUsers = async () => {
+    const listOfUsers = await userModels.User.find();
+    if (listOfUsers) {
+        return listOfUsers;
+    }
+    return new Error("Error: Sorry, users not found.");
+}
+
 module.exports.registerUser = async (userTocreate) => {
     try {
         let hashedPassword = userModels.User.hashPassword(userTocreate.password);

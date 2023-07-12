@@ -14,6 +14,16 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+module.exports.listOfUsers = function (req, res) {
+    usersService.listOfAllUsers().then(result => {
+        if (Array.isArray(result) && result.length > 0) {
+            return res.status(201).json(result);
+        }
+        return res.status(400).send('Unable to fetch users.');
+    }).catch(error => {
+        return "Error:", error
+    })
+}
 module.exports.registerUser = function (req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
