@@ -48,15 +48,18 @@ module.exports.updateUser = async (newData, oldUserName) => {
     try {
         const userWithMatchingUserName = await userModels.User.findOne({ userName: newData.userName });
         if (userWithMatchingUserName) {
-            throw new Error(userWithMatchingUserName.userName + ' already exists');
+            if (userWithMatchingUserName !== req.userName) {
+                throw new Error(userWithMatchingUserName.userName + ' already exists');
+            }
+
         }
         const oldUser = await userModels.User.findOne({ userName: oldUserName });
         if (!oldUser) {
             throw new Error(oldUserName + ' does not exist');
         }
         const userWithMatchingEmail = await userModels.User.findOne({ Email: newData.email });
-        if (userWithMatchingEmail) {
-            throw new userWithMatchingEmail.Email + ' already exist';
+        if (userWithMatchingEmail !== req.email) {
+            throw new Error(userWithMatchingEmail.Email + ' already exist');
         }
 
         const updatedDBUser = await userModels.User.findOneAndUpdate(
