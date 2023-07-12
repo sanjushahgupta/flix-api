@@ -49,7 +49,7 @@ module.exports.registerUser = function (req, res) {
 module.exports.updateUser = function (req, res) {
     const userToUpdate = {
         userName: req.body.userName,
-
+        password: req.body.password,
         email: req.body.email,
         birth: req.body.birth,
     }
@@ -61,15 +61,12 @@ module.exports.updateUser = function (req, res) {
     }
 
     usersService.updateUser(userToUpdate, oldUserName).then(result => {
-        if (result instanceof Error) {
-            return res.status(400).send(result.message);
-        }
         return res.status(200).json(result);
-    }).catch(error => {
-        return "Error:", error;
     })
+        .catch(error => {
+            return res.status(400).send(error.message);
+        });
 };
-
 
 module.exports.deleteUser = function (req, res) {
     let userName = req.user.userName

@@ -45,40 +45,45 @@ module.exports.registerUser = async (userTocreate) => {
 }
 
 module.exports.updateUser = async (newData, oldUserName) => {
-    const userWithMatchingUserName = await userModels.User.findOne({ userName: newData.userName });
-    if (userWithMatchingUserName) {
-        return userWithMatchingUserName.userName + ' already exists';
-    }
-    const oldUser = await userModels.User.findOne({ userName: oldUserName });
-    if (!oldUser) {
-        return oldUserName + ' does not exist';
-    }
-    const userWithMatchingEmail = await userModels.User.findOne({ Email: newData.email });
-    if (userWithMatchingEmail) {
-        return userWithMatchingEmail.Email + ' already exist';
-    }
+    try {
+        const userWithMatchingUserName = await userModels.User.findOne({ userName: newData.userName });
+        if (userWithMatchingUserName) {
+            throw new Error(userWithMatchingUserName.userName + ' already exists');
+        }
+        const oldUser = await userModels.User.findOne({ userName: oldUserName });
+        if (!oldUser) {
+            throw new Error(oldUserName + ' does not exist');
+        }
+        const userWithMatchingEmail = await userModels.User.findOne({ Email: newData.email });
+        if (userWithMatchingEmail) {
+            throw new userWithMatchingEmail.Email + ' already exist';
+        }
 
-    const updatedDBUser = await userModels.User.findOneAndUpdate(
-        { userName: oldUserName },
-        {
-            $set: {
-                userName: newData.userName,
-                Password: newData.password,
-                Email: newData.email,
-                Birth: newData.birth
+        const updatedDBUser = await userModels.User.findOneAndUpdate(
+            { userName: oldUserName },
+            {
+                $set: {
+                    userName: newData.userName,
+                    Password: userModels.User.hashPassword(newData.password),
+                    Email: newData.email,
+                    Birth: newData.birth
+                }
+            },
+            { new: true },
+        );
+        if (updatedDBUser) {
+            return {
+                userName: updatedDBUser.userName,
+                email: updatedDBUser.Email,
+                birth: updatedDBUser.Birth
             }
-        },
-        { new: true },
-    );
-    if (updatedDBUser) {
-        return {
-            userName: updatedDBUser.userName,
-            email: updatedDBUser.Email,
-            birth: updatedDBUser.Birth
+        } else {
+            return new Error('Unable to update user.');
         }
     }
-
-    return new Error('Unable to update user.');
+    catch (error) {
+        throw new Error(error.message);
+    }
 }
 
 

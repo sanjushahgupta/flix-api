@@ -12,14 +12,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 module.exports.listOfMovies = function (req, res) {
-    movieServices.listOfAllMovies().then(result => {
-        if (Array.isArray(result) && result.length > 0) {
-            return res.status(201).json(result);
-        }
-        return res.status(400).send('Unable to fetch Movies.');
-    }).catch(error => {
-        return "Error:", error
-    })
+    movieServices.listOfAllMovies()
+        .then(result => {
+            if (Array.isArray(result) && result.length > 0) {
+                return res.status(201).json(result);
+            }
+            return res.status(400).send('Unable to fetch Movies.');
+        }).catch(error => {
+            return "Error:", error
+        })
 }
 
 module.exports.movieByTitle = function (req, res) {
@@ -29,20 +30,22 @@ module.exports.movieByTitle = function (req, res) {
         } else {
             return res.status(500).send("Error: Sorry, the requested movie was not found.");
         }
-    }).catch(error => {
-        return "Error:", error;
     })
+        .catch(error => {
+            return "Error:", error;
+        })
 }
 
 module.exports.genreDescriptionByName = function (req, res) {
-    movieServices.genreDescriptionByName(req.params.name).then(result => {
-        if (result instanceof Error) {
-            return res.status(400).send(result.message);
-        }
-        return res.status(201).json(result);
-    }).catch(error => {
-        return "Error:", error;
-    })
+    movieServices.genreDescriptionByName(req.params.name)
+        .then(result => {
+            if (result instanceof Error) {
+                return res.status(400).send(result.message);
+            }
+            return res.status(201).json(result);
+        }).catch(error => {
+            return "Error:", error;
+        })
 }
 
 module.exports.directorDetailsByName = function (req, res) {
