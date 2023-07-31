@@ -25,9 +25,9 @@
  node index.js
  http://localhost:8000
  ```
- ```bash
-   https://movie-api-flix-556e5c313136.herokuapp.com/
-```
+
+ https://flix-api-1faf.onrender.com/
+
 
 ## Contributions
 Contributions to the FlixAPI are always welcome. 
