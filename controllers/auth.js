@@ -5,6 +5,12 @@ const passport = require("passport");
 
 require("../passport");
 
+/**
+ * Generate a JWT for a given user.
+ * @param {object} user
+ * @returns {string} JWT token
+ */
+
 function generateJWTToken(user) {
   return jwt.sign(user, jwtSecret, {
     subject: user.userName,
