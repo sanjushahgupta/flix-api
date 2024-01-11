@@ -79,8 +79,6 @@ app.post("/images", (req, res) => {
     return res.status(400).json({ error: "No file uploaded." });
   }
 
-  console.log("temporary file path", file.tempFilePath);
-
   const fileName = file.name;
   const fileContent = fs.readFileSync(file.tempFilePath);
 
