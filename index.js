@@ -12,6 +12,7 @@ const accessLogStream = fs.createWriteStream(path.join("log.txt"), {
   flags: "a",
 });
 
+const myImageBucket = "image-bucket-535";
 const fileUpload = require("express-fileupload");
 const {
   S3Client,
@@ -29,7 +30,12 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(fileUpload());
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
 
 require("./controllers/auth.js")(app);
 
@@ -53,10 +59,9 @@ const s3Client = new S3Client({
   forcePathStyle: true,
 });
 
-//To get images of S3 (image-bucket-535)
 app.get("/images", (req, res) => {
   const listObjectsParams = {
-    Bucket: "image-bucket-535",
+    Bucket: myImageBucket,
   };
 
   s3Client
@@ -74,11 +79,13 @@ app.post("/images", (req, res) => {
     return res.status(400).json({ error: "No file uploaded." });
   }
 
+  console.log("temporary file path", file.tempFilePath);
+
   const fileName = file.name;
   const fileContent = fs.readFileSync(file.tempFilePath);
 
   const putObjectParams = {
-    Bucket: "image-bucket-535",
+    Bucket: myImageBucket,
     Key: fileName,
     Body: fileContent,
   };
