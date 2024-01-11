@@ -12,14 +12,12 @@ const accessLogStream = fs.createWriteStream(path.join("log.txt"), {
   flags: "a",
 });
 
-//aws
 const fileUpload = require("express-fileupload");
 const {
   S3Client,
   ListObjectsV2Command,
   PutObjectCommand,
 } = require("@aws-sdk/client-s3");
-//
 
 /** set the port for the server to listen */
 const port = process.env.PORT || 8080;
