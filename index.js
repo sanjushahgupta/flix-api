@@ -12,6 +12,15 @@ const accessLogStream = fs.createWriteStream(path.join("log.txt"), {
   flags: "a",
 });
 
+//aws
+const fileUpload = require("express-fileupload");
+const {
+  S3Client,
+  ListObjectsV2Command,
+  PutObjectCommand,
+} = require("@aws-sdk/client-s3");
+//
+
 /** set the port for the server to listen */
 const port = process.env.PORT || 8080;
 
@@ -22,6 +31,7 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(fileUpload());
 
 require("./controllers/auth.js")(app);
 
@@ -37,6 +47,56 @@ app.use(express.static("public"));
 app.use(morgan("combined", { stream: accessLogStream }));
 app.use((err, req, res, next) => {
   res.status(500).send("error" + err);
+});
+
+const s3Client = new S3Client({
+  region: "eu-central-1",
+  endpoint: "http://localhost:4566",
+  forcePathStyle: true,
+});
+
+//To get images of S3 (image-bucket-535)
+app.get("/images", (req, res) => {
+  const listObjectsParams = {
+    Bucket: "image-bucket-535",
+  };
+
+  s3Client
+    .send(new ListObjectsV2Command(listObjectsParams))
+    .then((listObjectsResponse) => {
+      res.send(listObjectsResponse);
+    });
+});
+
+// To upload images directly to S3
+app.post("/images", (req, res) => {
+  const file = req.files.image;
+
+  if (!file) {
+    return res.status(400).json({ error: "No file uploaded." });
+  }
+
+  const fileName = file.name;
+  const fileContent = fs.readFileSync(file.tempFilePath);
+
+  const putObjectParams = {
+    Bucket: "image-bucket-535",
+    Key: fileName,
+    Body: fileContent,
+  };
+
+  const putObjectCmd = new PutObjectCommand(putObjectParams);
+
+  s3Client
+    .send(putObjectCmd)
+    .then((data) => {
+      console.log("File uploaded successfully:", data);
+      res.status(200).json({ message: "File uploaded successfully." });
+    })
+    .catch((error) => {
+      console.error("Error uploading file:", error);
+      res.status(500).json({ error: "Internal Server Error." });
+    });
 });
 
 /** Start the server and listen on the specified port */
