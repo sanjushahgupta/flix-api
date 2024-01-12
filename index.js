@@ -21,7 +21,7 @@ const {
 
 const s3Client = new S3Client({
   region: "eu-central-1",
-  endpoint: "http://localhost:4566",
+  //endpoint: "http://localhost:4566",
   forcePathStyle: true,
 });
 const myImageBucket = "image-bucket-535";
