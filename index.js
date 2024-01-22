@@ -1,4 +1,5 @@
 require("./passport.js");
+const sharp = require("sharp");
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -127,6 +128,101 @@ app.post("/image", (req, res) => {
       res.status(500).json({ error: error });
     });
 });
+
+//Fetched, resized and uploaded to S3.
+app.get("/resize", async (req, res) => {
+  const imageToResize = req.query.image;
+  let imageBuffer;
+  try {
+    imageBuffer = await getObjectFromS3(imageToResize);
+  } catch (e) {
+    if (e.Code == "NoSuchKey") {
+      res.send("That file does not exist.");
+      return;
+    }
+
+    res.send(e.message);
+    return;
+  }
+
+  const resizedBuffer = await resizeImage(imageBuffer);
+
+  try {
+    await UploadToS3(resizedBuffer, imageToResize);
+    res.send("Fetched, resized and uploaded to S3.");
+  } catch (error) {
+    res.send(error);
+  }
+});
+
+//
+async function getObjectFromS3(objectKey) {
+  const getObjectParams = {
+    Bucket: myImageBucket,
+    Key: objectKey,
+  };
+
+  try {
+    const response = await s3Client.send(new GetObjectCommand(getObjectParams));
+    const Imagebuffer = await streamToBuffer(response.Body);
+    return Imagebuffer;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function streamToBuffer(stream) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    stream.on("data", (chunk) => chunks.push(chunk));
+    stream.on("end", () => resolve(Buffer.concat(chunks)));
+    stream.on("error", reject);
+  });
+}
+
+async function resizeImage(imageToBeResize) {
+  let transform = sharp(imageToBeResize);
+  transform = transform.resize({
+    width: 70,
+    height: 70,
+    fit: sharp.fit.inside,
+  });
+  const resizedBuffer = await transform.toBuffer();
+
+  return resizedBuffer;
+}
+
+//to upload
+async function UploadToS3(file, name) {
+  let putObjectParams;
+  if (!file) {
+    return res.status(400).json({ error: "No file uploaded." });
+  }
+
+  if (file.name) {
+    const fileContent = fs.readFileSync(file.tempFilePath);
+    putObjectParams = {
+      Bucket: myImageBucket,
+      Key: file.name,
+      Body: fileContent,
+    };
+  } else {
+    const fileName = "thumbnail_" + name;
+    putObjectParams = {
+      Bucket: myImageBucket,
+      Key: fileName,
+      Body: file,
+    };
+  }
+
+  try {
+    const putObjectCmd = new PutObjectCommand(putObjectParams);
+    await s3Client.send(putObjectCmd);
+    return;
+  } catch (error) {
+    throw error;
+  }
+}
 
 /** Start the server and listen on the specified port */
 app.listen(port, "0.0.0.0", () => {
