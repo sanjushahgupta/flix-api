@@ -11,6 +11,13 @@ FlixAPI is an API that allows users to access movie details and information.
 - Add/remove movie to the favorites list
 - Deregister user
 
+## Built With
+
+- Node.js
+- MongoDB
+- Postman (API endpoint testing)
+- App hosted on Render
+
 ## Run Locally
 
 #### Clone the repository
